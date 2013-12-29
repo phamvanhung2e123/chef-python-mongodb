@@ -1,8 +1,10 @@
 #
-# Cookbook Name:: git
-# Recipe:: server
+# Cookbook Name:: nginx
+# Attributes:: upload_progress
 #
-# Copyright 2009, Opscode, Inc.
+# Author:: Jamie Winsor (<jamie@vialstudios.com>)
+#
+# Copyright 2012, Riot Games
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,20 +17,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-include_recipe "git"
-
-directory "/srv/git" do
-  owner "root"
-  group "root"
-  mode 0755
-end
-
-case node[:platform]
-when "debian", "ubuntu"
-  include_recipe "runit"
-  runit_service "git-daemon"
-else
-  log "Platform requires setting up a git daemon service script."
-  log "Hint: /usr/bin/git daemon --export-all --user=nobody --group=daemon --base-path=/srv/git"
-end
+default['nginx']['upload_progress']['url']      = "https://github.com/masterzen/nginx-upload-progress-module/tarball/v0.8.4"
+default['nginx']['upload_progress']['checksum'] = "9a6acb984d81f5d7e04214d63ae94273"

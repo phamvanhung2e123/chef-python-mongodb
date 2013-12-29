@@ -1,8 +1,10 @@
 #
-# Cookbook Name:: git
-# Recipe:: server
+# Cookbook Name:: nginx
+# Recipe:: http_stub_status_module
 #
-# Copyright 2009, Opscode, Inc.
+# Author:: Jamie Winsor (<jamie@vialstudios.com>)
+#
+# Copyright 2012, Riot Games
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,20 +17,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-include_recipe "git"
+include_recipe "nginx::authorized_ips"
 
-directory "/srv/git" do
+template "nginx_status" do
+  path "#{node['nginx']['dir']}/sites-available/nginx_status"
+  source "modules/nginx_status.erb"
   owner "root"
   group "root"
-  mode 0755
+  mode "0644"
+  notifies :reload, resources(:service => "nginx")
 end
 
-case node[:platform]
-when "debian", "ubuntu"
-  include_recipe "runit"
-  runit_service "git-daemon"
-else
-  log "Platform requires setting up a git daemon service script."
-  log "Hint: /usr/bin/git daemon --export-all --user=nobody --group=daemon --base-path=/srv/git"
-end
+nginx_site "nginx_status"
+
+node.run_state['nginx_configure_flags'] =
+  node.run_state['nginx_configure_flags'] | ["--with-http_stub_status_module"]

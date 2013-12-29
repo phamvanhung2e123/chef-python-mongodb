@@ -1,8 +1,10 @@
 #
-# Cookbook Name:: git
-# Recipe:: server
+# Cookbook Name:: nginx
+# Recipe:: ohai_plugin
 #
-# Copyright 2009, Opscode, Inc.
+# Author:: Jamie Winsor (<jamie@vialstudios.com>)
+#
+# Copyright 2012, Riot Games
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,20 +17,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-include_recipe "git"
-
-directory "/srv/git" do
+template "#{node['ohai']['plugin_path']}/nginx.rb" do
+  source "plugins/nginx.rb.erb"
   owner "root"
   group "root"
   mode 0755
+  variables(
+    :nginx_bin => node['nginx']['binary']
+  )
 end
 
-case node[:platform]
-when "debian", "ubuntu"
-  include_recipe "runit"
-  runit_service "git-daemon"
-else
-  log "Platform requires setting up a git daemon service script."
-  log "Hint: /usr/bin/git daemon --export-all --user=nobody --group=daemon --base-path=/srv/git"
-end
+include_recipe "ohai"

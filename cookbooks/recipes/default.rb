@@ -1,8 +1,9 @@
 #
-# Cookbook Name:: git
-# Recipe:: server
+# Author:: Seth Chisamore (<schisamo@opscode.com>)
+# Cookbook Name:: gunicorn
+# Recipe:: default
 #
-# Copyright 2009, Opscode, Inc.
+# Copyright 2011, Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,20 +16,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-include_recipe "git"
+include_recipe 'python'
 
-directory "/srv/git" do
-  owner "root"
-  group "root"
-  mode 0755
-end
-
-case node[:platform]
-when "debian", "ubuntu"
-  include_recipe "runit"
-  runit_service "git-daemon"
-else
-  log "Platform requires setting up a git daemon service script."
-  log "Hint: /usr/bin/git daemon --export-all --user=nobody --group=daemon --base-path=/srv/git"
+gunicorn_install "gunicorn" do
+  virtualenv node['gunicorn']['virtualenv']
 end
