@@ -24,20 +24,15 @@ Vagrant.configure("2") do |config|
   #
 
   # config.vm.provision :shell, :path => 'vagrant_scripts/before_script.sh'
-
+  config.vm.synced_folder "./", "/home/vagrant/data"
   config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = 'cookbooks'
-    chef.add_recipe 'apy'
     chef.add_recipe 'python'
-    chef.add_recipe 'yum'
     chef.add_recipe 'runit'
-    chef.add_recipe 'git'
-    chef.add_recipe 'vim'
-    chef.add_recipe 'curl'
+    chef.add_recipe 'zsh'
     chef.add_recipe 'apache2'
-    chef.add_recipe 'mongodb::10gen_repo'
     chef.add_recipe "build-essential"
   end
 
-#  config.vm.provision :shell, :path => 'vagrant_scripts/after_script.sh'
+  config.vm.provision :shell, :path => 'vagrant_scripts/after_script.sh'
 end
