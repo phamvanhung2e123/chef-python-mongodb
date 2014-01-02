@@ -18,7 +18,8 @@ Vagrant.configure("2") do |config|
   # accessing "localhost:8080" will access port 80 on the guest machine.
   config.vm.network :forwarded_port, guest: 80, host: 9001
   config.vm.network :forwarded_port, guest: 27017, host: 27019
-  # Enable provisioning with chef solo, specifying a cookbooks path, roles
+  config.vm.network :private_network, ip: "69.69.69.69"
+# Enable provisioning with chef solo, specifying a cookbooks path, roles
   # path, and data_bags path (all relative to this Vagrantfile), and adding
   # some recipes and/or roles.
   #
